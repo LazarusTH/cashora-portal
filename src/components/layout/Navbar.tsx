@@ -46,7 +46,7 @@ const Navbar = () => {
             onClick={() => navigate("/auth/signup")}
             className="bg-mint-500 hover:bg-mint-600"
           >
-            Get Started
+            Create Account
           </Button>
         </div>
       </div>

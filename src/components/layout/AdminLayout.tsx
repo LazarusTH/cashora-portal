@@ -1,5 +1,5 @@
 import { SidebarProvider, Sidebar, SidebarContent, SidebarHeader, SidebarMenu, SidebarMenuItem, SidebarMenuButton } from "@/components/ui/sidebar";
-import { LayoutDashboard, Users, History, Settings, LogOut } from "lucide-react";
+import { LayoutDashboard, Users, History, Settings, LogOut, Building2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
 
@@ -37,6 +37,12 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
                 <SidebarMenuButton tooltip="Users" onClick={() => navigate("/admin/users")}>
                   <Users />
                   <span>Users</span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton tooltip="Banks" onClick={() => navigate("/admin/banks")}>
+                  <Building2 />
+                  <span>Banks</span>
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>

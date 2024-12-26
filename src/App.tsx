@@ -17,6 +17,7 @@ import AdminUsers from "./pages/admin/Users";
 import AdminTransactions from "./pages/admin/Transactions";
 import AdminSettings from "./pages/admin/Settings";
 import AdminSignIn from "./pages/admin/SignIn";
+import AdminBanks from "./pages/admin/Banks";
 
 const App = () => {
   const queryClient = new QueryClient();
@@ -41,6 +42,7 @@ const App = () => {
             <Route path="/admin/signin" element={<AdminSignIn />} />
             <Route path="/admin/dashboard" element={<AdminDashboard />} />
             <Route path="/admin/users" element={<AdminUsers />} />
+            <Route path="/admin/banks" element={<AdminBanks />} />
             <Route path="/admin/transactions" element={<AdminTransactions />} />
             <Route path="/admin/settings" element={<AdminSettings />} />
           </Routes>

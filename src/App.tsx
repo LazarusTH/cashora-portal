@@ -18,34 +18,36 @@ import AdminTransactions from "./pages/admin/Transactions";
 import AdminSettings from "./pages/admin/Settings";
 import AdminSignIn from "./pages/admin/SignIn";
 
-const queryClient = new QueryClient();
+const App = () => {
+  const queryClient = new QueryClient();
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/auth/signin" element={<SignIn />} />
-          <Route path="/auth/signup" element={<SignUp />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/portal/deposit" element={<Deposit />} />
-          <Route path="/portal/withdraw" element={<Withdraw />} />
-          <Route path="/portal/send" element={<Send />} />
-          <Route path="/portal/support" element={<Support />} />
-          {/* Admin Routes */}
-          <Route path="/admin/signin" element={<AdminSignIn />} />
-          <Route path="/admin/dashboard" element={<AdminDashboard />} />
-          <Route path="/admin/users" element={<AdminUsers />} />
-          <Route path="/admin/transactions" element={<AdminTransactions />} />
-          <Route path="/admin/settings" element={<AdminSettings />} />
-        </Routes>
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
+  return (
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Index />} />
+            <Route path="/auth/signin" element={<SignIn />} />
+            <Route path="/auth/signup" element={<SignUp />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/portal/deposit" element={<Deposit />} />
+            <Route path="/portal/withdraw" element={<Withdraw />} />
+            <Route path="/portal/send" element={<Send />} />
+            <Route path="/portal/support" element={<Support />} />
+            {/* Admin Routes */}
+            <Route path="/admin/signin" element={<AdminSignIn />} />
+            <Route path="/admin/dashboard" element={<AdminDashboard />} />
+            <Route path="/admin/users" element={<AdminUsers />} />
+            <Route path="/admin/transactions" element={<AdminTransactions />} />
+            <Route path="/admin/settings" element={<AdminSettings />} />
+          </Routes>
+        </BrowserRouter>
+      </TooltipProvider>
+    </QueryClientProvider>
+  );
+};
 
 export default App;

@@ -37,7 +37,7 @@ const AdminTransactions = () => {
                   <TableCell>{transaction.amount}</TableCell>
                   <TableCell>{transaction.date}</TableCell>
                   <TableCell>
-                    <Badge variant={transaction.status === "completed" ? "success" : "secondary"}>
+                    <Badge variant={transaction.status === "completed" ? "default" : "secondary"}>
                       {transaction.status}
                     </Badge>
                   </TableCell>

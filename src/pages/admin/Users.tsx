@@ -34,7 +34,7 @@ const AdminUsers = () => {
                   <TableCell className="font-medium">{user.name}</TableCell>
                   <TableCell>{user.email}</TableCell>
                   <TableCell>
-                    <Badge variant={user.status === "active" ? "success" : "secondary"}>
+                    <Badge variant={user.status === "active" ? "default" : "secondary"}>
                       {user.status}
                     </Badge>
                   </TableCell>

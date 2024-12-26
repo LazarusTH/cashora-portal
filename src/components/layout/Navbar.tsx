@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { NavigationMenu, NavigationMenuItem, NavigationMenuLink, NavigationMenuList } from "@/components/ui/navigation-menu";
 import { useNavigate } from "react-router-dom";
-import { Home, Info, Mail, User } from "lucide-react";
+import { Home, Info, Mail, User, Shield } from "lucide-react";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -35,6 +35,13 @@ const Navbar = () => {
         </NavigationMenu>
 
         <div className="flex items-center gap-2">
+          <Button
+            variant="ghost"
+            onClick={() => navigate("/admin/signin")}
+            className="hidden md:flex"
+          >
+            <Shield className="mr-2 h-4 w-4" /> Admin
+          </Button>
           <Button
             variant="ghost"
             onClick={() => navigate("/auth/signin")}

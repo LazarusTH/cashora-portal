@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import DashboardLayout from "@/components/layout/DashboardLayout";
-import { MessageSquare, Send } from "lucide-react";
+import { MessageSquare } from "lucide-react";
 
 interface Message {
   id: number;
@@ -13,11 +13,14 @@ interface Message {
 }
 
 const CASHORA_RESPONSES = {
-  default: "Hello! I'm here to help you with any questions about Cashora's services.",
-  deposit: "To make a deposit, go to the Deposit section in your dashboard. You can upload your receipt and we'll process it within 24 hours.",
-  withdraw: "Withdrawals are processed within 1-2 business days. Make sure you've verified your bank account details.",
-  send: "You can send money instantly to other Cashora users. Just use their email or username in the Send Money section.",
-  fees: "Cashora charges 0% fees for deposits and transfers between Cashora users. Withdrawal fees vary by bank.",
+  default: "Hello! I'm here to help you with any questions about Cashora's services. You can ask about deposits, withdrawals, sending money, or our fees.",
+  deposit: "To make a deposit, go to the Deposit section in your dashboard. We accept various payment methods and process deposits within 24 hours.",
+  withdraw: "For withdrawals, please ensure your bank details are verified. Withdrawals are typically processed within 1-2 business days.",
+  send: "You can instantly send money to other Cashora users. Just enter their email or username in the Send Money section.",
+  fees: "Cashora charges 0% fees for deposits and transfers between Cashora users. Withdrawal fees vary by bank and country.",
+  balance: "Your balance is always secure with Cashora. You can view your current balance and transaction history in the Dashboard.",
+  security: "We take security seriously. Cashora uses bank-level encryption to protect your transactions and personal information.",
+  support: "Our support team is available 24/7. For urgent matters, you can also email us at support@cashora.com",
 };
 
 const Support = () => {
@@ -37,6 +40,9 @@ const Support = () => {
     if (lowerMessage.includes("withdraw")) return CASHORA_RESPONSES.withdraw;
     if (lowerMessage.includes("send") || lowerMessage.includes("transfer")) return CASHORA_RESPONSES.send;
     if (lowerMessage.includes("fee")) return CASHORA_RESPONSES.fees;
+    if (lowerMessage.includes("balance")) return CASHORA_RESPONSES.balance;
+    if (lowerMessage.includes("secure") || lowerMessage.includes("security")) return CASHORA_RESPONSES.security;
+    if (lowerMessage.includes("help") || lowerMessage.includes("support")) return CASHORA_RESPONSES.support;
     return CASHORA_RESPONSES.default;
   };
 
@@ -67,10 +73,10 @@ const Support = () => {
 
   return (
     <DashboardLayout>
-      <div className="max-w-4xl mx-auto p-4 space-y-6">
+      <div className="max-w-4xl mx-auto space-y-6">
         <div>
           <h1 className="text-3xl font-bold">Customer Support</h1>
-          <p className="text-gray-500 mt-2">Get help from our support team</p>
+          <p className="text-gray-500 mt-2">Get instant help with your questions</p>
         </div>
 
         <Card className="p-6 h-[600px] flex flex-col">
@@ -90,7 +96,7 @@ const Support = () => {
                   }`}
                 >
                   <p>{message.text}</p>
-                  <span className="text-xs opacity-70">
+                  <span className="text-xs opacity-70 mt-1 block">
                     {message.timestamp.toLocaleTimeString()}
                   </span>
                 </div>
@@ -104,9 +110,10 @@ const Support = () => {
               onChange={(e) => setNewMessage(e.target.value)}
               placeholder="Type your message..."
               onKeyPress={(e) => e.key === "Enter" && handleSendMessage()}
+              className="flex-1"
             />
             <Button onClick={handleSendMessage}>
-              <Send className="h-4 w-4" />
+              <MessageSquare className="h-4 w-4" />
             </Button>
           </div>
         </Card>

@@ -1,9 +1,20 @@
 import { SidebarProvider, Sidebar, SidebarContent, SidebarHeader, SidebarMenu, SidebarMenuItem, SidebarMenuButton } from "@/components/ui/sidebar";
 import { Home, MessageSquare, LogOut, Upload, Download, Send, User } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useToast } from "@/components/ui/use-toast";
 
 const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   const navigate = useNavigate();
+  const { toast } = useToast();
+
+  const handleLogout = () => {
+    // TODO: Implement actual logout logic with Supabase
+    toast({
+      title: "Logged out successfully",
+      description: "You have been logged out of your account.",
+    });
+    navigate("/auth/signin");
+  };
 
   return (
     <SidebarProvider>
@@ -54,7 +65,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
-                <SidebarMenuButton tooltip="Logout" variant="outline" className="mt-auto">
+                <SidebarMenuButton tooltip="Logout" onClick={handleLogout}>
                   <LogOut />
                   <span>Logout</span>
                 </SidebarMenuButton>

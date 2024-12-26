@@ -1,5 +1,5 @@
 import { SidebarProvider, Sidebar, SidebarContent, SidebarHeader, SidebarMenu, SidebarMenuItem, SidebarMenuButton } from "@/components/ui/sidebar";
-import { Home, CreditCard, History, Settings, LogOut, Upload, Download, Send, MessageSquare } from "lucide-react";
+import { Home, MessageSquare, LogOut, Upload, Download, Send, User } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
@@ -24,6 +24,12 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
+                <SidebarMenuButton tooltip="Profile" onClick={() => navigate("/profile")}>
+                  <User />
+                  <span>Profile</span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
                 <SidebarMenuButton tooltip="Deposit" onClick={() => navigate("/portal/deposit")}>
                   <Upload />
                   <span>Deposit</span>
@@ -42,27 +48,9 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
-                <SidebarMenuButton tooltip="Transactions" onClick={() => navigate("/transactions")}>
-                  <CreditCard />
-                  <span>Transactions</span>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-              <SidebarMenuItem>
-                <SidebarMenuButton tooltip="History">
-                  <History />
-                  <span>History</span>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-              <SidebarMenuItem>
                 <SidebarMenuButton tooltip="Support" onClick={() => navigate("/portal/support")}>
                   <MessageSquare />
                   <span>Support</span>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-              <SidebarMenuItem>
-                <SidebarMenuButton tooltip="Settings">
-                  <Settings />
-                  <span>Settings</span>
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>

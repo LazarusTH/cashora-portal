@@ -12,16 +12,33 @@ interface Message {
   timestamp: Date;
 }
 
+const CASHORA_RESPONSES = {
+  default: "Hello! I'm here to help you with any questions about Cashora's services.",
+  deposit: "To make a deposit, go to the Deposit section in your dashboard. You can upload your receipt and we'll process it within 24 hours.",
+  withdraw: "Withdrawals are processed within 1-2 business days. Make sure you've verified your bank account details.",
+  send: "You can send money instantly to other Cashora users. Just use their email or username in the Send Money section.",
+  fees: "Cashora charges 0% fees for deposits and transfers between Cashora users. Withdrawal fees vary by bank.",
+};
+
 const Support = () => {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: 1,
-      text: "Hello! How can we help you today?",
+      text: CASHORA_RESPONSES.default,
       sender: "support",
       timestamp: new Date(),
     },
   ]);
   const [newMessage, setNewMessage] = useState("");
+
+  const getAutoReply = (message: string) => {
+    const lowerMessage = message.toLowerCase();
+    if (lowerMessage.includes("deposit")) return CASHORA_RESPONSES.deposit;
+    if (lowerMessage.includes("withdraw")) return CASHORA_RESPONSES.withdraw;
+    if (lowerMessage.includes("send") || lowerMessage.includes("transfer")) return CASHORA_RESPONSES.send;
+    if (lowerMessage.includes("fee")) return CASHORA_RESPONSES.fees;
+    return CASHORA_RESPONSES.default;
+  };
 
   const handleSendMessage = () => {
     if (!newMessage.trim()) return;
@@ -36,15 +53,15 @@ const Support = () => {
     setMessages([...messages, userMessage]);
     setNewMessage("");
 
-    // Simulate support response
+    // Auto-reply
     setTimeout(() => {
-      const supportMessage: Message = {
+      const autoReply: Message = {
         id: messages.length + 2,
-        text: "Thank you for your message. Our support team will get back to you shortly.",
+        text: getAutoReply(newMessage),
         sender: "support",
         timestamp: new Date(),
       };
-      setMessages((prev) => [...prev, supportMessage]);
+      setMessages((prev) => [...prev, autoReply]);
     }, 1000);
   };
 

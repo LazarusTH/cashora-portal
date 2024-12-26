@@ -1,6 +1,7 @@
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import { AccountOverview } from "@/components/dashboard/AccountOverview";
 import { TransactionsList } from "@/components/dashboard/TransactionsList";
+import { BalanceChart } from "@/components/dashboard/BalanceChart";
 
 const Dashboard = () => {
   return (
@@ -11,6 +12,7 @@ const Dashboard = () => {
           <p className="text-gray-500">Here's what's happening with your account today.</p>
         </div>
         <AccountOverview />
+        <BalanceChart />
         <TransactionsList />
       </div>
     </DashboardLayout>

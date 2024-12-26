@@ -1,5 +1,5 @@
 import { SidebarProvider, Sidebar, SidebarContent, SidebarHeader, SidebarMenu, SidebarMenuItem, SidebarMenuButton } from "@/components/ui/sidebar";
-import { Home, CreditCard, History, Settings, LogOut } from "lucide-react";
+import { Home, CreditCard, History, Settings, LogOut, Upload, Download, Send, MessageSquare } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
@@ -24,7 +24,25 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
-                <SidebarMenuButton tooltip="Transactions">
+                <SidebarMenuButton tooltip="Deposit" onClick={() => navigate("/portal/deposit")}>
+                  <Upload />
+                  <span>Deposit</span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton tooltip="Withdraw" onClick={() => navigate("/portal/withdraw")}>
+                  <Download />
+                  <span>Withdraw</span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton tooltip="Send Money" onClick={() => navigate("/portal/send")}>
+                  <Send />
+                  <span>Send Money</span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton tooltip="Transactions" onClick={() => navigate("/transactions")}>
                   <CreditCard />
                   <span>Transactions</span>
                 </SidebarMenuButton>
@@ -33,6 +51,12 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
                 <SidebarMenuButton tooltip="History">
                   <History />
                   <span>History</span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton tooltip="Support" onClick={() => navigate("/portal/support")}>
+                  <MessageSquare />
+                  <span>Support</span>
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>

@@ -7,28 +7,101 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 
+interface LimitSettings {
+  type: 'withdrawal' | 'sending';
+  period: 'daily' | 'weekly' | 'monthly' | 'yearly';
+  amount: number;
+}
+
+interface FeeSettings {
+  type: 'percentage' | 'fixed';
+  value: number;
+}
+
+interface User {
+  id: number;
+  name: string;
+  email: string;
+  status: 'active' | 'inactive';
+  role: string;
+  banks: string[];
+  balance: string;
+  withdrawalLimits: LimitSettings[];
+  sendingLimits: LimitSettings[];
+  feeSettings: FeeSettings;
+}
+
 const AdminUsers = () => {
-  const [users, setUsers] = useState([
-    { id: 1, name: "John Doe", email: "john@example.com", status: "active", balance: "$1,234", role: "user", bank: "Chase Bank", withdrawalLimit: "$5,000" },
-    { id: 2, name: "Jane Smith", email: "jane@example.com", status: "inactive", balance: "$567", role: "user", bank: "Bank of America", withdrawalLimit: "$3,000" },
-    { id: 3, name: "Bob Johnson", email: "bob@example.com", status: "active", balance: "$890", role: "admin", bank: "Wells Fargo", withdrawalLimit: "$10,000" },
+  const [users, setUsers] = useState<User[]>([
+    {
+      id: 1,
+      name: "John Doe",
+      email: "john@example.com",
+      status: "active",
+      role: "user",
+      banks: ["Chase Bank", "Bank of America"],
+      balance: "$1,234",
+      withdrawalLimits: [
+        { type: 'withdrawal', period: 'daily', amount: 5000 },
+        { type: 'withdrawal', period: 'monthly', amount: 50000 }
+      ],
+      sendingLimits: [
+        { type: 'sending', period: 'daily', amount: 3000 },
+        { type: 'sending', period: 'monthly', amount: 30000 }
+      ],
+      feeSettings: { type: 'percentage', value: 2.5 }
+    },
+    // ... Add more sample users
   ]);
 
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const { toast } = useToast();
 
-  const handleUpdateBalance = (userId: number, amount: string) => {
+  const handleUpdateLimits = (userId: number, limitType: 'withdrawal' | 'sending', period: string, amount: number) => {
     setUsers(users.map(user => {
       if (user.id === userId) {
-        return { ...user, balance: amount };
+        const limits = limitType === 'withdrawal' ? user.withdrawalLimits : user.sendingLimits;
+        const updatedLimits = [...limits];
+        const existingLimitIndex = limits.findIndex(l => l.period === period);
+        
+        if (existingLimitIndex >= 0) {
+          updatedLimits[existingLimitIndex].amount = amount;
+        } else {
+          updatedLimits.push({ type: limitType, period: period as any, amount });
+        }
+
+        return {
+          ...user,
+          [limitType === 'withdrawal' ? 'withdrawalLimits' : 'sendingLimits']: updatedLimits
+        };
       }
       return user;
     }));
+
     toast({
-      title: "Balance updated",
-      description: "User balance has been updated successfully.",
+      title: "Limits updated",
+      description: `${limitType.charAt(0).toUpperCase() + limitType.slice(1)} limits have been updated.`,
+    });
+  };
+
+  const handleUpdateFees = (userId: number, feeType: 'percentage' | 'fixed', value: number) => {
+    setUsers(users.map(user => {
+      if (user.id === userId) {
+        return {
+          ...user,
+          feeSettings: { type: feeType, value }
+        };
+      }
+      return user;
+    }));
+
+    toast({
+      title: "Fees updated",
+      description: "Fee settings have been updated successfully.",
     });
   };
 
@@ -41,7 +114,7 @@ const AdminUsers = () => {
             <DialogTrigger asChild>
               <Button>Add New User</Button>
             </DialogTrigger>
-            <DialogContent>
+            <DialogContent className="max-w-2xl">
               <DialogHeader>
                 <DialogTitle>Add New User</DialogTitle>
               </DialogHeader>
@@ -66,19 +139,6 @@ const AdminUsers = () => {
                     </SelectContent>
                   </Select>
                 </div>
-                <div>
-                  <Label htmlFor="bank">Bank</Label>
-                  <Select>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select bank" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="chase">Chase Bank</SelectItem>
-                      <SelectItem value="boa">Bank of America</SelectItem>
-                      <SelectItem value="wells">Wells Fargo</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
                 <Button className="w-full">Create User</Button>
               </div>
             </DialogContent>
@@ -93,15 +153,14 @@ const AdminUsers = () => {
                 <TableHead>Email</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead>Role</TableHead>
-                <TableHead>Bank</TableHead>
+                <TableHead>Banks</TableHead>
                 <TableHead>Balance</TableHead>
-                <TableHead>Withdrawal Limit</TableHead>
                 <TableHead>Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {users.map((user) => (
-                <TableRow key={user.id}>
+                <TableRow key={user.id} className="cursor-pointer" onClick={() => setSelectedUser(user)}>
                   <TableCell className="font-medium">{user.name}</TableCell>
                   <TableCell>{user.email}</TableCell>
                   <TableCell>
@@ -112,46 +171,112 @@ const AdminUsers = () => {
                   <TableCell>
                     <Badge variant="outline">{user.role}</Badge>
                   </TableCell>
-                  <TableCell>{user.bank}</TableCell>
+                  <TableCell>{user.banks.join(", ")}</TableCell>
                   <TableCell>{user.balance}</TableCell>
-                  <TableCell>{user.withdrawalLimit}</TableCell>
                   <TableCell>
                     <Dialog>
                       <DialogTrigger asChild>
                         <Button variant="outline" size="sm">Manage</Button>
                       </DialogTrigger>
-                      <DialogContent>
+                      <DialogContent className="max-w-4xl">
                         <DialogHeader>
                           <DialogTitle>Manage User: {user.name}</DialogTitle>
                         </DialogHeader>
-                        <div className="space-y-4">
-                          <div>
-                            <Label>Update Balance</Label>
-                            <div className="flex gap-2">
-                              <Input type="number" placeholder="Enter amount" />
-                              <Button onClick={() => handleUpdateBalance(user.id, "$2,000")}>Update</Button>
+                        <Tabs defaultValue="limits" className="w-full">
+                          <TabsList>
+                            <TabsTrigger value="limits">Limits</TabsTrigger>
+                            <TabsTrigger value="fees">Fees</TabsTrigger>
+                            <TabsTrigger value="banks">Banks</TabsTrigger>
+                          </TabsList>
+                          <TabsContent value="limits" className="space-y-4">
+                            <div>
+                              <h3 className="text-lg font-semibold mb-4">Withdrawal Limits</h3>
+                              <div className="grid grid-cols-2 gap-4">
+                                {['daily', 'weekly', 'monthly', 'yearly'].map((period) => (
+                                  <div key={`withdrawal-${period}`}>
+                                    <Label>{period.charAt(0).toUpperCase() + period.slice(1)} Limit</Label>
+                                    <div className="flex gap-2">
+                                      <Input
+                                        type="number"
+                                        placeholder="Enter amount"
+                                        defaultValue={user.withdrawalLimits.find(l => l.period === period)?.amount}
+                                        onChange={(e) => handleUpdateLimits(user.id, 'withdrawal', period, Number(e.target.value))}
+                                      />
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
                             </div>
-                          </div>
-                          <div>
-                            <Label>Withdrawal Limit</Label>
-                            <div className="flex gap-2">
-                              <Input type="number" placeholder="Enter limit" />
-                              <Button variant="outline">Set Limit</Button>
+                            <div>
+                              <h3 className="text-lg font-semibold mb-4">Sending Limits</h3>
+                              <div className="grid grid-cols-2 gap-4">
+                                {['daily', 'weekly', 'monthly', 'yearly'].map((period) => (
+                                  <div key={`sending-${period}`}>
+                                    <Label>{period.charAt(0).toUpperCase() + period.slice(1)} Limit</Label>
+                                    <div className="flex gap-2">
+                                      <Input
+                                        type="number"
+                                        placeholder="Enter amount"
+                                        defaultValue={user.sendingLimits.find(l => l.period === period)?.amount}
+                                        onChange={(e) => handleUpdateLimits(user.id, 'sending', period, Number(e.target.value))}
+                                      />
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
                             </div>
-                          </div>
-                          <div>
-                            <Label>Status</Label>
-                            <Select>
-                              <SelectTrigger>
-                                <SelectValue placeholder={user.status} />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <SelectItem value="active">Active</SelectItem>
-                                <SelectItem value="inactive">Inactive</SelectItem>
-                              </SelectContent>
-                            </Select>
-                          </div>
-                        </div>
+                          </TabsContent>
+                          <TabsContent value="fees" className="space-y-4">
+                            <div>
+                              <Label>Fee Type</Label>
+                              <Select
+                                defaultValue={user.feeSettings.type}
+                                onValueChange={(value: 'percentage' | 'fixed') => 
+                                  handleUpdateFees(user.id, value, user.feeSettings.value)
+                                }
+                              >
+                                <SelectTrigger>
+                                  <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="percentage">Percentage</SelectItem>
+                                  <SelectItem value="fixed">Fixed Amount</SelectItem>
+                                </SelectContent>
+                              </Select>
+                            </div>
+                            <div>
+                              <Label>Fee Value</Label>
+                              <div className="flex gap-2">
+                                <Input
+                                  type="number"
+                                  placeholder={user.feeSettings.type === 'percentage' ? "Enter percentage" : "Enter amount"}
+                                  value={user.feeSettings.value}
+                                  onChange={(e) => handleUpdateFees(user.id, user.feeSettings.type, Number(e.target.value))}
+                                />
+                                <span className="flex items-center">
+                                  {user.feeSettings.type === 'percentage' ? '%' : '$'}
+                                </span>
+                              </div>
+                            </div>
+                          </TabsContent>
+                          <TabsContent value="banks" className="space-y-4">
+                            <div>
+                              <Label>Assigned Banks</Label>
+                              <Select>
+                                <SelectTrigger>
+                                  <SelectValue placeholder="Select banks" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  {user.banks.map((bank) => (
+                                    <SelectItem key={bank} value={bank}>
+                                      {bank}
+                                    </SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                            </div>
+                          </TabsContent>
+                        </Tabs>
                       </DialogContent>
                     </Dialog>
                   </TableCell>
@@ -160,6 +285,48 @@ const AdminUsers = () => {
             </TableBody>
           </Table>
         </Card>
+
+        {selectedUser && (
+          <Dialog open={!!selectedUser} onOpenChange={() => setSelectedUser(null)}>
+            <DialogContent className="max-w-4xl">
+              <DialogHeader>
+                <DialogTitle>User Details</DialogTitle>
+              </DialogHeader>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label>Name</Label>
+                  <p className="text-lg">{selectedUser.name}</p>
+                </div>
+                <div>
+                  <Label>Email</Label>
+                  <p className="text-lg">{selectedUser.email}</p>
+                </div>
+                <div>
+                  <Label>Status</Label>
+                  <p>
+                    <Badge variant={selectedUser.status === "active" ? "default" : "secondary"}>
+                      {selectedUser.status}
+                    </Badge>
+                  </p>
+                </div>
+                <div>
+                  <Label>Role</Label>
+                  <p>
+                    <Badge variant="outline">{selectedUser.role}</Badge>
+                  </p>
+                </div>
+                <div>
+                  <Label>Balance</Label>
+                  <p className="text-lg">{selectedUser.balance}</p>
+                </div>
+                <div>
+                  <Label>Banks</Label>
+                  <p className="text-lg">{selectedUser.banks.join(", ")}</p>
+                </div>
+              </div>
+            </DialogContent>
+          </Dialog>
+        )}
       </div>
     </AdminLayout>
   );

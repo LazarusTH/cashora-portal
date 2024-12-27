@@ -1,5 +1,5 @@
 import { SidebarProvider, Sidebar, SidebarContent, SidebarHeader, SidebarMenu, SidebarMenuItem, SidebarMenuButton } from "@/components/ui/sidebar";
-import { LayoutDashboard, Users, History, Settings, LogOut, Building2 } from "lucide-react";
+import { LayoutDashboard, Users, History, Settings, LogOut, Building2, ArrowDownToLine, ArrowUpFromLine, Send } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
 
@@ -43,6 +43,24 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
                 <SidebarMenuButton tooltip="Banks" onClick={() => navigate("/admin/banks")}>
                   <Building2 />
                   <span>Banks</span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton tooltip="Withdrawal Requests" onClick={() => navigate("/admin/withdrawal-requests")}>
+                  <ArrowUpFromLine />
+                  <span>Withdrawal Requests</span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton tooltip="Deposit Requests" onClick={() => navigate("/admin/deposit-requests")}>
+                  <ArrowDownToLine />
+                  <span>Deposit Requests</span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton tooltip="Send Requests" onClick={() => navigate("/admin/send-requests")}>
+                  <Send />
+                  <span>Send Requests</span>
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>

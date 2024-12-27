@@ -18,6 +18,9 @@ import AdminTransactions from "./pages/admin/Transactions";
 import AdminSettings from "./pages/admin/Settings";
 import AdminSignIn from "./pages/admin/SignIn";
 import AdminBanks from "./pages/admin/Banks";
+import WithdrawalRequests from "./pages/admin/WithdrawalRequests";
+import DepositRequests from "./pages/admin/DepositRequests";
+import SendRequests from "./pages/admin/SendRequests";
 
 const App = () => {
   const queryClient = new QueryClient();
@@ -43,6 +46,9 @@ const App = () => {
             <Route path="/admin/dashboard" element={<AdminDashboard />} />
             <Route path="/admin/users" element={<AdminUsers />} />
             <Route path="/admin/banks" element={<AdminBanks />} />
+            <Route path="/admin/withdrawal-requests" element={<WithdrawalRequests />} />
+            <Route path="/admin/deposit-requests" element={<DepositRequests />} />
+            <Route path="/admin/send-requests" element={<SendRequests />} />
             <Route path="/admin/transactions" element={<AdminTransactions />} />
             <Route path="/admin/settings" element={<AdminSettings />} />
           </Routes>

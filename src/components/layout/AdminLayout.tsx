@@ -1,7 +1,7 @@
-import { SidebarProvider, Sidebar, SidebarContent, SidebarHeader, SidebarMenu, SidebarMenuItem, SidebarMenuButton } from "@/components/ui/sidebar";
+import { SidebarProvider, Sidebar, SidebarContent, SidebarHeader, SidebarMenu, SidebarMenuItem, SidebarMenuButton, SidebarTrigger } from "@/components/ui/sidebar";
 import { LayoutDashboard, Users, History, Settings, LogOut, Building2, ArrowDownToLine, ArrowUpFromLine, Send } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 
 const AdminLayout = ({ children }: { children: React.ReactNode }) => {
   const navigate = useNavigate();
@@ -18,7 +18,7 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full bg-gray-50">
-        <Sidebar>
+        <Sidebar className="hidden md:block">
           <SidebarHeader className="p-4">
             <div className="flex items-center gap-2">
               <img src="/favicon.ico" alt="Logo" className="w-8 h-8" />
@@ -84,7 +84,13 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
             </SidebarMenu>
           </SidebarContent>
         </Sidebar>
-        <main className="flex-1 p-8">
+        
+        {/* Mobile Trigger */}
+        <div className="fixed top-4 left-4 z-50 md:hidden">
+          <SidebarTrigger />
+        </div>
+        
+        <main className="flex-1 p-4 md:p-8 pt-16 md:pt-8">
           {children}
         </main>
       </div>

@@ -1,6 +1,7 @@
 import AdminLayout from "@/components/layout/AdminLayout";
 import { Card } from "@/components/ui/card";
 import { Users, ArrowUpRight, ArrowDownRight, AlertCircle, Building2 } from "lucide-react";
+import { AdminTransactionsList } from "@/components/dashboard/AdminTransactionsList";
 import { ChartContainer, ChartTooltip } from "@/components/ui/chart";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line } from "recharts";
 
@@ -110,6 +111,8 @@ const AdminDashboard = () => {
             </div>
           </Card>
         </div>
+
+        <AdminTransactionsList />
       </div>
     </AdminLayout>
   );

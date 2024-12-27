@@ -9,7 +9,9 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useState } from "react";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
+import { NewUserForm } from "@/components/admin/users/NewUserForm";
+import { BankSelection } from "@/components/admin/users/BankSelection";
 
 interface LimitSettings {
   type: 'withdrawal' | 'sending';
@@ -26,7 +28,6 @@ interface User {
   id: number;
   name: string;
   email: string;
-  status: 'active' | 'inactive';
   role: string;
   banks: string[];
   balance: string;
@@ -41,7 +42,6 @@ const AdminUsers = () => {
       id: 1,
       name: "John Doe",
       email: "john@example.com",
-      status: "active",
       role: "user",
       banks: ["Chase Bank", "Bank of America"],
       balance: "$1,234",
@@ -55,11 +55,16 @@ const AdminUsers = () => {
       ],
       feeSettings: { type: 'percentage', value: 2.5 }
     },
-    // ... Add more sample users
   ]);
 
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const { toast } = useToast();
+
+  const availableBanks = [
+    { id: 1, name: "Chase Bank" },
+    { id: 2, name: "Bank of America" },
+    { id: 3, name: "Wells Fargo" },
+  ];
 
   const handleUpdateLimits = (userId: number, limitType: 'withdrawal' | 'sending', period: string, amount: number) => {
     setUsers(users.map(user => {
@@ -114,34 +119,10 @@ const AdminUsers = () => {
             <DialogTrigger asChild>
               <Button>Add New User</Button>
             </DialogTrigger>
-            <DialogContent className="max-w-2xl">
-              <DialogHeader>
-                <DialogTitle>Add New User</DialogTitle>
-              </DialogHeader>
-              <div className="space-y-4">
-                <div>
-                  <Label htmlFor="name">Full Name</Label>
-                  <Input id="name" placeholder="Enter full name" />
-                </div>
-                <div>
-                  <Label htmlFor="email">Email</Label>
-                  <Input id="email" type="email" placeholder="Enter email" />
-                </div>
-                <div>
-                  <Label htmlFor="role">Role</Label>
-                  <Select>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select role" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="user">User</SelectItem>
-                      <SelectItem value="admin">Admin</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <Button className="w-full">Create User</Button>
-              </div>
-            </DialogContent>
+            <NewUserForm onSuccess={() => {
+              // Refresh users list
+              // TODO: Implement actual refresh logic
+            }} />
           </Dialog>
         </div>
 
@@ -151,7 +132,6 @@ const AdminUsers = () => {
               <TableRow>
                 <TableHead>Name</TableHead>
                 <TableHead>Email</TableHead>
-                <TableHead>Status</TableHead>
                 <TableHead>Role</TableHead>
                 <TableHead>Banks</TableHead>
                 <TableHead>Balance</TableHead>
@@ -163,11 +143,6 @@ const AdminUsers = () => {
                 <TableRow key={user.id} className="cursor-pointer" onClick={() => setSelectedUser(user)}>
                   <TableCell className="font-medium">{user.name}</TableCell>
                   <TableCell>{user.email}</TableCell>
-                  <TableCell>
-                    <Badge variant={user.status === "active" ? "default" : "secondary"}>
-                      {user.status}
-                    </Badge>
-                  </TableCell>
                   <TableCell>
                     <Badge variant="outline">{user.role}</Badge>
                   </TableCell>
@@ -260,21 +235,16 @@ const AdminUsers = () => {
                             </div>
                           </TabsContent>
                           <TabsContent value="banks" className="space-y-4">
-                            <div>
-                              <Label>Assigned Banks</Label>
-                              <Select>
-                                <SelectTrigger>
-                                  <SelectValue placeholder="Select banks" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                  {user.banks.map((bank) => (
-                                    <SelectItem key={bank} value={bank}>
-                                      {bank}
-                                    </SelectItem>
-                                  ))}
-                                </SelectContent>
-                              </Select>
-                            </div>
+                            <BankSelection
+                              userId={user.id}
+                              userName={user.name}
+                              availableBanks={availableBanks}
+                              selectedBanks={user.banks}
+                              onClose={() => {
+                                // Refresh users list
+                                // TODO: Implement actual refresh logic
+                              }}
+                            />
                           </TabsContent>
                         </Tabs>
                       </DialogContent>
@@ -300,14 +270,6 @@ const AdminUsers = () => {
                 <div>
                   <Label>Email</Label>
                   <p className="text-lg">{selectedUser.email}</p>
-                </div>
-                <div>
-                  <Label>Status</Label>
-                  <p>
-                    <Badge variant={selectedUser.status === "active" ? "default" : "secondary"}>
-                      {selectedUser.status}
-                    </Badge>
-                  </p>
                 </div>
                 <div>
                   <Label>Role</Label>

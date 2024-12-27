@@ -1,5 +1,7 @@
 import { Card } from "@/components/ui/card";
 import { ArrowDownRight, ArrowUpRight, Send } from "lucide-react";
+import { useState } from "react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const transactions = [
   {
@@ -61,21 +63,33 @@ const transactions = [
 ];
 
 export const TransactionsList = () => {
+  const [filter, setFilter] = useState<string>("all");
+  
+  const filteredTransactions = transactions.filter(transaction => {
+    if (filter === "all") return true;
+    return transaction.type === filter;
+  });
+
   return (
     <div className="space-y-4 fade-in">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <h2 className="text-2xl font-semibold">Recent Transactions</h2>
-        <select className="border rounded-md p-1 w-full sm:w-auto">
-          <option value="all">All Transactions</option>
-          <option value="deposits">Deposits</option>
-          <option value="withdrawals">Withdrawals</option>
-          <option value="sends">Sends</option>
-        </select>
+        <Select value={filter} onValueChange={setFilter}>
+          <SelectTrigger className="w-full sm:w-[180px]">
+            <SelectValue placeholder="Filter transactions" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Transactions</SelectItem>
+            <SelectItem value="deposit">Deposits</SelectItem>
+            <SelectItem value="withdrawal">Withdrawals</SelectItem>
+            <SelectItem value="send">Sends</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
       
       <Card className="divide-y overflow-hidden">
         <div className="max-h-[400px] overflow-y-auto">
-          {transactions.map((transaction) => (
+          {filteredTransactions.map((transaction) => (
             <div
               key={transaction.id}
               className="p-4 flex items-center justify-between hover:bg-gray-50 transition-colors"

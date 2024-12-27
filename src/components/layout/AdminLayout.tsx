@@ -1,5 +1,5 @@
 import { SidebarProvider, Sidebar, SidebarContent, SidebarHeader, SidebarMenu, SidebarMenuItem, SidebarMenuButton, SidebarTrigger } from "@/components/ui/sidebar";
-import { LayoutDashboard, Users, History, Settings, LogOut, Building2, ArrowDownToLine, ArrowUpFromLine, Send } from "lucide-react";
+import { LayoutDashboard, Users, History, Settings, LogOut, Building2, ArrowDownToLine, ArrowUpFromLine, Send, Mail } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 
@@ -18,7 +18,7 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full bg-gray-50">
-        <Sidebar className="hidden md:block">
+        <Sidebar className="fixed left-0 top-0 z-40 h-screen transition-transform -translate-x-full md:translate-x-0">
           <SidebarHeader className="p-4">
             <div className="flex items-center gap-2">
               <img src="/favicon.ico" alt="Logo" className="w-8 h-8" />
@@ -81,16 +81,22 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
                   <span>Logout</span>
                 </SidebarMenuButton>
               </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton tooltip="Email" onClick={() => navigate("/admin/email")}>
+                  <Mail />
+                  <span>Email</span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
             </SidebarMenu>
           </SidebarContent>
         </Sidebar>
         
         {/* Mobile Trigger */}
         <div className="fixed top-4 left-4 z-50 md:hidden">
-          <SidebarTrigger />
+          <SidebarTrigger className="p-2 bg-white rounded-lg shadow-md" />
         </div>
         
-        <main className="flex-1 p-4 md:p-8 pt-16 md:pt-8">
+        <main className="flex-1 p-4 md:p-8 pt-16 md:pt-8 md:ml-64">
           {children}
         </main>
       </div>

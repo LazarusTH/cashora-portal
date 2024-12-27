@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 
@@ -72,6 +73,21 @@ export const NewUserForm = ({ onSuccess }: { onSuccess: () => void }) => {
             placeholder="Enter password"
             required
           />
+        </div>
+        <div>
+          <Label htmlFor="role">Role</Label>
+          <Select 
+            value={formData.role} 
+            onValueChange={(value) => setFormData({ ...formData, role: value })}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Select role" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="user">User</SelectItem>
+              <SelectItem value="admin">Admin</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
         <Button type="submit" className="w-full">Create User</Button>
       </form>

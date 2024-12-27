@@ -21,6 +21,7 @@ import AdminBanks from "./pages/admin/Banks";
 import WithdrawalRequests from "./pages/admin/WithdrawalRequests";
 import DepositRequests from "./pages/admin/DepositRequests";
 import SendRequests from "./pages/admin/SendRequests";
+import Email from "./pages/admin/Email";
 
 const App = () => {
   const queryClient = new QueryClient();
@@ -51,6 +52,7 @@ const App = () => {
             <Route path="/admin/send-requests" element={<SendRequests />} />
             <Route path="/admin/transactions" element={<AdminTransactions />} />
             <Route path="/admin/settings" element={<AdminSettings />} />
+            <Route path="/admin/email" element={<Email />} />
           </Routes>
         </BrowserRouter>
       </TooltipProvider>

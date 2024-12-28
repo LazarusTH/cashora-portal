@@ -39,11 +39,11 @@ export const BankSelection = ({
 
   return (
     <div className="space-y-4">
-      <ScrollArea className="h-[300px]">
+      <ScrollArea className="h-[300px] pr-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {availableBanks.map((bank) => (
-            <Card key={bank.id} className="p-4">
-              <div className="flex items-center space-x-2">
+            <Card key={bank.id} className="p-4 bg-dark-200 border-dark-100 hover:bg-dark-100 transition-colors">
+              <div className="flex items-center space-x-3">
                 <Checkbox
                   id={`bank-${bank.id}`}
                   checked={selected.includes(bank.name)}
@@ -54,15 +54,16 @@ export const BankSelection = ({
                       setSelected(selected.filter((name) => name !== bank.name));
                     }
                   }}
+                  className="border-brand-orange data-[state=checked]:bg-brand-orange data-[state=checked]:border-brand-orange"
                 />
-                <Label htmlFor={`bank-${bank.id}`}>{bank.name}</Label>
+                <Label htmlFor={`bank-${bank.id}`} className="text-gray-300">{bank.name}</Label>
               </div>
             </Card>
           ))}
         </div>
       </ScrollArea>
       <div className="flex justify-end">
-        <Button onClick={handleSave}>Save Changes</Button>
+        <Button onClick={handleSave} className="bg-brand-orange hover:bg-brand-orange/90">Save Changes</Button>
       </div>
     </div>
   );

@@ -40,11 +40,11 @@
 }
 
 .sidebar-item {
-  @apply flex items-center gap-3 px-4 py-2 text-sm font-medium text-gray-300 rounded-lg hover:bg-dark-200 transition-colors;
+  @apply flex items-center gap-3 px-4 py-2 text-sm font-medium text-gray-300 rounded-lg hover:bg-dark-100 transition-colors;
 }
 
 .sidebar-item.active {
-  @apply bg-dark-200 text-white;
+  @apply bg-dark-100 text-white;
 }
 
 .stats-card {

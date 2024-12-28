@@ -22,7 +22,8 @@ const transactions = [
     id: 3,
     type: "send",
     amount: 200.00,
-    description: "Send to Alice",
+    description: "Send to Alice Smith",
+    recipient: "Alice Smith",
     date: "2024-02-18",
   },
   {
@@ -87,20 +88,20 @@ export const TransactionsList = () => {
         </Select>
       </div>
       
-      <Card className="divide-y overflow-hidden">
+      <Card className="divide-y divide-dark-200 overflow-hidden bg-dark-200 border-dark-100">
         <div className="max-h-[400px] overflow-y-auto">
           {filteredTransactions.map((transaction) => (
             <div
               key={transaction.id}
-              className="p-4 flex items-center justify-between hover:bg-gray-50 transition-colors"
+              className="p-4 flex items-center justify-between hover:bg-dark-100 transition-colors"
             >
               <div className="flex items-center gap-3">
                 <div className={`p-2 rounded-full ${
                   transaction.type === "deposit" 
-                    ? "bg-green-100 text-green-600"
+                    ? "bg-green-900/30 text-green-400"
                     : transaction.type === "withdrawal"
-                    ? "bg-red-100 text-red-600"
-                    : "bg-blue-100 text-blue-600"
+                    ? "bg-red-900/30 text-red-400"
+                    : "bg-blue-900/30 text-blue-400"
                 }`}>
                   {transaction.type === "deposit" ? (
                     <ArrowDownRight className="h-4 w-4" />
@@ -111,14 +112,18 @@ export const TransactionsList = () => {
                   )}
                 </div>
                 <div>
-                  <p className="font-medium">{transaction.description}</p>
-                  <p className="text-sm text-gray-500">{transaction.date}</p>
+                  <p className="font-medium text-white">
+                    {transaction.type === "send" && transaction.recipient
+                      ? `Send to ${transaction.recipient}`
+                      : transaction.description}
+                  </p>
+                  <p className="text-sm text-gray-400">{transaction.date}</p>
                 </div>
               </div>
               <span className={`font-semibold ${
                 transaction.type === "deposit" 
-                  ? "text-green-600"
-                  : "text-red-600"
+                  ? "text-green-400"
+                  : "text-red-400"
               }`}>
                 {transaction.type === "deposit" ? "+" : "-"}${transaction.amount.toFixed(2)}
               </span>

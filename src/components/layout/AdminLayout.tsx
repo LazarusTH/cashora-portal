@@ -1,5 +1,5 @@
 import { SidebarProvider, Sidebar, SidebarContent, SidebarHeader, SidebarMenu, SidebarMenuItem, SidebarMenuButton, SidebarTrigger } from "@/components/ui/sidebar";
-import { LayoutDashboard, Users, History, Settings, LogOut, Building2, ArrowDownToLine, ArrowUpFromLine, Send, Mail, Search } from "lucide-react";
+import { LayoutDashboard, Users, History, Settings, LogOut, Building2, ArrowDownToLine, ArrowUpFromLine, Send, Mail } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { Input } from "@/components/ui/input";
@@ -25,17 +25,14 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
               <span className="text-2xl font-bold text-brand-orange">CASHORA</span>
             </div>
             <div className="mt-4">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
-                <Input 
-                  type="search"
-                  placeholder="Search for..."
-                  className="search-input pl-10"
-                />
-              </div>
+              <Input 
+                type="search"
+                placeholder="Search for..."
+                className="search-input w-full bg-dark-100 border-dark-100 text-gray-300"
+              />
             </div>
           </SidebarHeader>
-          <SidebarContent>
+          <SidebarContent className="flex flex-col justify-between h-[calc(100vh-180px)]">
             <SidebarMenu>
               <SidebarMenuItem>
                 <SidebarMenuButton tooltip="Dashboard" onClick={() => navigate("/admin/dashboard")} className="sidebar-item">
@@ -87,12 +84,12 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
               </SidebarMenuItem>
             </SidebarMenu>
 
-            <div className="absolute bottom-8 left-0 right-0 px-4">
-              <SidebarMenuButton tooltip="Settings" onClick={() => navigate("/admin/settings")} className="sidebar-item">
+            <div className="mt-auto px-4 space-y-2">
+              <SidebarMenuButton tooltip="Settings" onClick={() => navigate("/admin/settings")} className="sidebar-item w-full">
                 <Settings className="h-5 w-5" />
                 <span>Settings</span>
               </SidebarMenuButton>
-              <SidebarMenuButton tooltip="Logout" onClick={handleLogout} className="sidebar-item mt-2">
+              <SidebarMenuButton tooltip="Logout" onClick={handleLogout} className="sidebar-item w-full">
                 <LogOut className="h-5 w-5" />
                 <span>Logout</span>
               </SidebarMenuButton>
@@ -105,7 +102,7 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
           <SidebarTrigger className="p-2 bg-dark-200 rounded-lg text-white hover:bg-dark-100" />
         </div>
         
-        <main className="flex-1 p-4 md:p-8 pt-16 md:pt-8 md:ml-64">
+        <main className="flex-1 p-4 md:p-8 pt-16 md:pt-8 md:ml-64 w-full max-w-[1600px] mx-auto">
           {children}
         </main>
       </div>

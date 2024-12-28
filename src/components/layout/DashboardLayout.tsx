@@ -18,62 +18,72 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <SidebarProvider>
-      <div className="min-h-screen flex w-full bg-gray-50">
-        <Sidebar>
+      <div className="min-h-screen flex w-full bg-dark-300">
+        <Sidebar className="fixed left-0 top-0 z-40 h-screen transition-transform -translate-x-full md:translate-x-0 bg-dark-200 border-r border-dark-100">
           <SidebarHeader className="p-4">
             <div className="flex items-center gap-2">
-              <img src="/favicon.ico" alt="Logo" className="w-8 h-8" />
-              <span className="text-xl font-bold text-mint-600">Cashora</span>
+              <span className="text-2xl font-bold text-brand-orange">CASHORA</span>
+            </div>
+            <div className="mt-4">
+              <div className="relative">
+                <input 
+                  type="search"
+                  placeholder="Search..."
+                  className="search-input"
+                />
+              </div>
             </div>
           </SidebarHeader>
           <SidebarContent>
             <SidebarMenu>
               <SidebarMenuItem>
-                <SidebarMenuButton tooltip="Dashboard" onClick={() => navigate("/dashboard")}>
-                  <Home />
+                <SidebarMenuButton tooltip="Dashboard" onClick={() => navigate("/dashboard")} className="sidebar-item">
+                  <Home className="h-5 w-5" />
                   <span>Dashboard</span>
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
-                <SidebarMenuButton tooltip="Profile" onClick={() => navigate("/profile")}>
-                  <User />
+                <SidebarMenuButton tooltip="Profile" onClick={() => navigate("/profile")} className="sidebar-item">
+                  <User className="h-5 w-5" />
                   <span>Profile</span>
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
-                <SidebarMenuButton tooltip="Deposit" onClick={() => navigate("/portal/deposit")}>
-                  <Upload />
+                <SidebarMenuButton tooltip="Deposit" onClick={() => navigate("/portal/deposit")} className="sidebar-item">
+                  <Upload className="h-5 w-5" />
                   <span>Deposit</span>
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
-                <SidebarMenuButton tooltip="Withdraw" onClick={() => navigate("/portal/withdraw")}>
-                  <Download />
+                <SidebarMenuButton tooltip="Withdraw" onClick={() => navigate("/portal/withdraw")} className="sidebar-item">
+                  <Download className="h-5 w-5" />
                   <span>Withdraw</span>
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
-                <SidebarMenuButton tooltip="Send Money" onClick={() => navigate("/portal/send")}>
-                  <Send />
+                <SidebarMenuButton tooltip="Send Money" onClick={() => navigate("/portal/send")} className="sidebar-item">
+                  <Send className="h-5 w-5" />
                   <span>Send Money</span>
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
-                <SidebarMenuButton tooltip="Support" onClick={() => navigate("/portal/support")}>
-                  <MessageSquare />
+                <SidebarMenuButton tooltip="Support" onClick={() => navigate("/portal/support")} className="sidebar-item">
+                  <MessageSquare className="h-5 w-5" />
                   <span>Support</span>
                 </SidebarMenuButton>
               </SidebarMenuItem>
-              <SidebarMenuItem>
-                <SidebarMenuButton tooltip="Logout" onClick={handleLogout}>
-                  <LogOut />
-                  <span>Logout</span>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
             </SidebarMenu>
+
+            <div className="absolute bottom-8 left-0 right-0 px-4">
+              <SidebarMenuButton tooltip="Logout" onClick={handleLogout} className="sidebar-item">
+                <LogOut className="h-5 w-5" />
+                <span>Logout</span>
+              </SidebarMenuButton>
+            </div>
           </SidebarContent>
         </Sidebar>
-        <main className="flex-1 p-8">
+        
+        <main className="flex-1 p-4 md:p-8 md:ml-64">
           {children}
         </main>
       </div>

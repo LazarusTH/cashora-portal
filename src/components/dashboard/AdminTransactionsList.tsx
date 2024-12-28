@@ -2,6 +2,8 @@ import { Card } from "@/components/ui/card";
 import { ArrowDownRight, ArrowUpRight, Send, MoreVertical, Pencil, Trash2 } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const transactions = [
   {
@@ -11,6 +13,7 @@ const transactions = [
       email: "hello@johncarter.com"
     },
     type: "send",
+    recipient: "Alice Smith",
     amount: 1099.24,
     date: "Jan 30, 2024",
     status: "accepted"
@@ -78,15 +81,20 @@ export const AdminTransactionsList = () => {
       <div className="p-6">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-lg font-semibold text-white">Recent Transactions</h2>
-          <select className="bg-dark-100 text-white text-sm rounded-lg px-3 py-1.5 border border-dark-100">
-            <option>All Transactions</option>
-            <option>Deposits</option>
-            <option>Withdrawals</option>
-            <option>Sends</option>
-          </select>
+          <Select defaultValue="all">
+            <SelectTrigger className="w-[180px] bg-dark-100 border-dark-100">
+              <SelectValue placeholder="Filter transactions" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Transactions</SelectItem>
+              <SelectItem value="deposit">Deposits</SelectItem>
+              <SelectItem value="withdrawal">Withdrawals</SelectItem>
+              <SelectItem value="send">Sends</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
         
-        <div className="overflow-x-auto">
+        <ScrollArea className="h-[400px]">
           <table className="transaction-table">
             <thead>
               <tr>
@@ -118,7 +126,12 @@ export const AdminTransactionsList = () => {
                       {transaction.type === "deposit" && <ArrowDownRight className="h-4 w-4 text-green-400" />}
                       {transaction.type === "withdrawal" && <ArrowUpRight className="h-4 w-4 text-red-400" />}
                       {transaction.type === "send" && <Send className="h-4 w-4 text-blue-400" />}
-                      <span>{transaction.type}</span>
+                      <span>
+                        {transaction.type}
+                        {transaction.type === "send" && transaction.recipient && (
+                          <span className="text-gray-400 ml-1">to {transaction.recipient}</span>
+                        )}
+                      </span>
                     </div>
                   </td>
                   <td className="text-white font-medium">
@@ -145,7 +158,7 @@ export const AdminTransactionsList = () => {
               ))}
             </tbody>
           </table>
-        </div>
+        </ScrollArea>
       </div>
     </Card>
   );

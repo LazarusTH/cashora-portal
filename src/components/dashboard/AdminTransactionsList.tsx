@@ -1,73 +1,152 @@
 import { Card } from "@/components/ui/card";
-import { ArrowDownRight, ArrowUpRight, Send } from "lucide-react";
+import { ArrowDownRight, ArrowUpRight, Send, MoreVertical, Pencil, Trash2 } from "lucide-react";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
 
 const transactions = [
   {
     id: 1,
-    type: "deposit",
-    amount: 500.00,
-    description: "Deposit from John Doe",
-    date: "2024-02-20",
+    client: {
+      name: "John Carter",
+      email: "hello@johncarter.com"
+    },
+    type: "send",
+    amount: 1099.24,
+    date: "Jan 30, 2024",
+    status: "accepted"
   },
   {
     id: 2,
-    type: "withdrawal",
-    amount: 50.00,
-    description: "Withdrawal to Jane Smith",
-    date: "2024-02-19",
+    client: {
+      name: "Sophie Moore",
+      email: "contact@sophiemoore.com"
+    },
+    type: "deposit",
+    amount: 5870.32,
+    date: "Jan 27, 2024",
+    status: "rejected"
   },
   {
     id: 3,
-    type: "send",
-    amount: 200.00,
-    description: "Send from Alice to Bob",
-    date: "2024-02-18",
+    client: {
+      name: "Matt Cannon",
+      email: "info@mattcannon.com"
+    },
+    type: "withdrawal",
+    amount: 13899.48,
+    date: "Jan 24, 2024",
+    status: "accepted"
   },
+  {
+    id: 4,
+    client: {
+      name: "Graham Hills",
+      email: "hi@grahamhills.com"
+    },
+    type: "send",
+    amount: 1569.12,
+    date: "Jan 21, 2024",
+    status: "pending"
+  },
+  {
+    id: 5,
+    client: {
+      name: "Sandy Houston",
+      email: "contact@sandyhouston.com"
+    },
+    type: "deposit",
+    amount: 899.16,
+    date: "Jan 18, 2024",
+    status: "accepted"
+  },
+  {
+    id: 6,
+    client: {
+      name: "Andy Smith",
+      email: "hello@andysmith.com"
+    },
+    type: "withdrawal",
+    amount: 2449.64,
+    date: "Jan 15, 2024",
+    status: "pending"
+  }
 ];
 
 export const AdminTransactionsList = () => {
   return (
-    <div className="space-y-4">
-      <h2 className="text-2xl font-semibold">Recent Transactions</h2>
-      <Card className="divide-y overflow-hidden">
-        <div className="max-h-[400px] overflow-y-auto">
-          {transactions.map((transaction) => (
-            <div
-              key={transaction.id}
-              className="p-4 flex items-center justify-between hover:bg-gray-50 transition-colors"
-            >
-              <div className="flex items-center gap-3">
-                <div className={`p-2 rounded-full ${
-                  transaction.type === "deposit" 
-                    ? "bg-green-100 text-green-600"
-                    : transaction.type === "withdrawal"
-                    ? "bg-red-100 text-red-600"
-                    : "bg-blue-100 text-blue-600"
-                }`}>
-                  {transaction.type === "deposit" ? (
-                    <ArrowDownRight className="h-4 w-4" />
-                  ) : transaction.type === "withdrawal" ? (
-                    <ArrowUpRight className="h-4 w-4" />
-                  ) : (
-                    <Send className="h-4 w-4" />
-                  )}
-                </div>
-                <div>
-                  <p className="font-medium">{transaction.description}</p>
-                  <p className="text-sm text-gray-500">{transaction.date}</p>
-                </div>
-              </div>
-              <span className={`font-semibold ${
-                transaction.type === "deposit" 
-                  ? "text-green-600"
-                  : "text-red-600"
-              }`}>
-                {transaction.type === "deposit" ? "+" : "-"}${transaction.amount.toFixed(2)}
-              </span>
-            </div>
-          ))}
+    <Card className="bg-dark-200 border-dark-100">
+      <div className="p-6">
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-lg font-semibold text-white">Recent Transactions</h2>
+          <select className="bg-dark-100 text-white text-sm rounded-lg px-3 py-1.5 border border-dark-100">
+            <option>All Transactions</option>
+            <option>Deposits</option>
+            <option>Withdrawals</option>
+            <option>Sends</option>
+          </select>
         </div>
-      </Card>
-    </div>
+        
+        <div className="overflow-x-auto">
+          <table className="transaction-table">
+            <thead>
+              <tr>
+                <th>Client</th>
+                <th>Date</th>
+                <th>Status</th>
+                <th>Transaction Type</th>
+                <th>Amount</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {transactions.map((transaction) => (
+                <tr key={transaction.id}>
+                  <td>
+                    <div>
+                      <p className="font-medium text-white">{transaction.client.name}</p>
+                      <p className="text-gray-400">{transaction.client.email}</p>
+                    </div>
+                  </td>
+                  <td className="text-gray-300">{transaction.date}</td>
+                  <td>
+                    <span className={`status-badge ${transaction.status}`}>
+                      {transaction.status}
+                    </span>
+                  </td>
+                  <td className="text-gray-300">
+                    <div className="flex items-center gap-2">
+                      {transaction.type === "deposit" && <ArrowDownRight className="h-4 w-4 text-green-400" />}
+                      {transaction.type === "withdrawal" && <ArrowUpRight className="h-4 w-4 text-red-400" />}
+                      {transaction.type === "send" && <Send className="h-4 w-4 text-blue-400" />}
+                      <span>{transaction.type}</span>
+                    </div>
+                  </td>
+                  <td className="text-white font-medium">
+                    ${transaction.amount.toFixed(2)}
+                  </td>
+                  <td>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" className="h-8 w-8 p-0">
+                          <MoreVertical className="h-4 w-4 text-gray-400" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end" className="bg-dark-100 text-gray-300 border-dark-200">
+                        <DropdownMenuItem className="hover:bg-dark-200">
+                          <Pencil className="mr-2 h-4 w-4" /> Edit
+                        </DropdownMenuItem>
+                        <DropdownMenuItem className="hover:bg-dark-200 text-red-400">
+                          <Trash2 className="mr-2 h-4 w-4" /> Delete
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </Card>
   );
 };

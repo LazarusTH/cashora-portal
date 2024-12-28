@@ -1,111 +1,118 @@
 import AdminLayout from "@/components/layout/AdminLayout";
 import { Card } from "@/components/ui/card";
-import { Users, ArrowUpRight, ArrowDownRight, AlertCircle, Building2 } from "lucide-react";
+import { Users, ArrowUpRight, ArrowDownRight, Send } from "lucide-react";
 import { AdminTransactionsList } from "@/components/dashboard/AdminTransactionsList";
-import { ChartContainer, ChartTooltip } from "@/components/ui/chart";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line } from "recharts";
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 
 const AdminDashboard = () => {
   const transactionData = [
-    { name: "Jan", deposits: 4000, withdrawals: 2400 },
-    { name: "Feb", deposits: 3000, withdrawals: 1398 },
-    { name: "Mar", deposits: 2000, withdrawals: 9800 },
-    { name: "Apr", deposits: 2780, withdrawals: 3908 },
-    { name: "May", deposits: 1890, withdrawals: 4800 },
-    { name: "Jun", deposits: 2390, withdrawals: 3800 },
-  ];
-
-  const userGrowthData = [
-    { name: "Jan", users: 400 },
-    { name: "Feb", users: 600 },
-    { name: "Mar", users: 800 },
-    { name: "Apr", users: 1200 },
-    { name: "May", users: 1600 },
-    { name: "Jun", users: 2000 },
+    { name: "Jan 1", value: 100 },
+    { name: "Jan 8", value: 150 },
+    { name: "Jan 15", value: 180 },
+    { name: "Jan 24", value: 250 },
+    { name: "Jan 31", value: 220 },
+    { name: "Feb 1", value: 200 },
   ];
 
   return (
     <AdminLayout>
       <div className="space-y-8">
-        <h1 className="text-3xl font-bold">Admin Dashboard</h1>
+        <h1 className="text-3xl font-bold text-white">Dashboard</h1>
         
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-          <Card className="p-6">
-            <div className="flex items-center gap-4">
-              <div className="p-3 bg-blue-100 rounded-full">
-                <Users className="h-6 w-6 text-blue-600" />
+          <Card className="stats-card">
+            <div className="flex flex-col gap-2">
+              <div className="flex items-center gap-2 text-orange-400">
+                <ArrowDownRight className="h-5 w-5" />
+                <span className="text-sm">Total Deposit</span>
               </div>
-              <div>
-                <h3 className="text-sm font-medium text-gray-500">Total Users</h3>
-                <p className="text-2xl font-bold">2,000</p>
-              </div>
+              <p className="text-2xl font-bold text-white">$10,000,000</p>
             </div>
           </Card>
           
-          <Card className="p-6">
-            <div className="flex items-center gap-4">
-              <div className="p-3 bg-green-100 rounded-full">
-                <ArrowDownRight className="h-6 w-6 text-green-600" />
+          <Card className="stats-card">
+            <div className="flex flex-col gap-2">
+              <div className="flex items-center gap-2 text-blue-400">
+                <Users className="h-5 w-5" />
+                <span className="text-sm">Total Users</span>
               </div>
-              <div>
-                <h3 className="text-sm font-medium text-gray-500">Total Deposits</h3>
-                <p className="text-2xl font-bold">$150,000</p>
-              </div>
+              <p className="text-2xl font-bold text-white">230</p>
             </div>
           </Card>
           
-          <Card className="p-6">
-            <div className="flex items-center gap-4">
-              <div className="p-3 bg-red-100 rounded-full">
-                <ArrowUpRight className="h-6 w-6 text-red-600" />
+          <Card className="stats-card">
+            <div className="flex flex-col gap-2">
+              <div className="flex items-center gap-2 text-red-400">
+                <ArrowUpRight className="h-5 w-5" />
+                <span className="text-sm">Total Withdrawals</span>
               </div>
-              <div>
-                <h3 className="text-sm font-medium text-gray-500">Total Withdrawals</h3>
-                <p className="text-2xl font-bold">$80,000</p>
-              </div>
+              <p className="text-2xl font-bold text-white">$10,000,000</p>
             </div>
           </Card>
           
-          <Card className="p-6">
-            <div className="flex items-center gap-4">
-              <div className="p-3 bg-purple-100 rounded-full">
-                <Building2 className="h-6 w-6 text-purple-600" />
+          <Card className="stats-card">
+            <div className="flex flex-col gap-2">
+              <div className="flex items-center gap-2 text-green-400">
+                <Send className="h-5 w-5" />
+                <span className="text-sm">Total Sendings</span>
               </div>
-              <div>
-                <h3 className="text-sm font-medium text-gray-500">Total Banks</h3>
-                <p className="text-2xl font-bold">12</p>
-              </div>
+              <p className="text-2xl font-bold text-white">$10,000,000</p>
             </div>
           </Card>
         </div>
 
         <div className="grid gap-6 lg:grid-cols-2">
-          <Card className="p-6">
-            <h3 className="text-lg font-semibold mb-4">Transaction Overview</h3>
-            <div className="h-[300px]">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={transactionData}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="name" />
-                  <YAxis />
-                  <Tooltip />
-                  <Bar dataKey="deposits" fill="#22c55e" name="Deposits" />
-                  <Bar dataKey="withdrawals" fill="#ef4444" name="Withdrawals" />
-                </BarChart>
-              </ResponsiveContainer>
+          <Card className="chart-card">
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-lg font-semibold text-white">Banks</h3>
+            </div>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between p-4 bg-dark-100 rounded-lg">
+                <div>
+                  <p className="text-sm text-white">Commercial Bank Of Ethiopia</p>
+                  <p className="text-xs text-gray-400">200 Users</p>
+                </div>
+              </div>
+              <div className="flex items-center justify-between p-4 bg-dark-100 rounded-lg">
+                <div>
+                  <p className="text-sm text-white">Awash Bank</p>
+                  <p className="text-xs text-gray-400">100 Users</p>
+                </div>
+              </div>
             </div>
           </Card>
 
-          <Card className="p-6">
-            <h3 className="text-lg font-semibold mb-4">User Growth</h3>
-            <div className="h-[300px]">
+          <Card className="chart-card">
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <h3 className="text-lg font-semibold text-white">Transactions Overview</h3>
+                <p className="text-3xl font-bold text-white mt-2">257</p>
+              </div>
+              <select className="bg-dark-100 text-white text-sm rounded-lg px-3 py-1.5 border border-dark-100">
+                <option>Jan 2024</option>
+              </select>
+            </div>
+            <div className="h-[200px]">
               <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={userGrowthData}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="name" />
-                  <YAxis />
-                  <Tooltip />
-                  <Line type="monotone" dataKey="users" stroke="#3b82f6" />
+                <LineChart data={transactionData}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#2A303C" />
+                  <XAxis dataKey="name" stroke="#6B7280" />
+                  <YAxis stroke="#6B7280" />
+                  <Tooltip 
+                    contentStyle={{ 
+                      backgroundColor: '#1F2937',
+                      border: 'none',
+                      borderRadius: '8px',
+                      color: '#fff'
+                    }}
+                  />
+                  <Line 
+                    type="monotone" 
+                    dataKey="value" 
+                    stroke="#3B82F6"
+                    strokeWidth={2}
+                    dot={{ fill: '#3B82F6' }}
+                  />
                 </LineChart>
               </ResponsiveContainer>
             </div>

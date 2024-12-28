@@ -13,7 +13,10 @@ const transactions = [
       email: "hello@johncarter.com"
     },
     type: "send",
-    recipient: "Alice Smith",
+    recipient: {
+      name: "Alice Smith",
+      email: "alice@example.com"
+    },
     amount: 1099.24,
     date: "Jan 30, 2024",
     status: "accepted"
@@ -129,7 +132,7 @@ export const AdminTransactionsList = () => {
                       <span>
                         {transaction.type}
                         {transaction.type === "send" && transaction.recipient && (
-                          <span className="text-gray-400 ml-1">to {transaction.recipient}</span>
+                          <span className="text-gray-400 ml-1">to {transaction.recipient.name}</span>
                         )}
                       </span>
                     </div>

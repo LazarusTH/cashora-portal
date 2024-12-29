@@ -19,7 +19,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full bg-dark-300">
-        <Sidebar className="fixed left-0 top-0 z-40 h-screen transition-transform -translate-x-full md:translate-x-0 bg-dark-200 border-r border-dark-100">
+        <Sidebar className="fixed left-0 top-0 z-40 h-screen transition-transform -translate-x-full md:translate-x-0 bg-dark-200 border-r border-dark-100 w-[250px]">
           <SidebarHeader className="p-4">
             <div className="flex items-center gap-2">
               <span className="text-2xl font-bold text-brand-orange">CASHORA</span>
@@ -83,7 +83,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
           </SidebarContent>
         </Sidebar>
         
-        <main className="flex-1 p-4 md:p-8 md:ml-64">
+        <main className="flex-1 p-4 md:p-6 md:ml-[250px]">
           {children}
         </main>
       </div>

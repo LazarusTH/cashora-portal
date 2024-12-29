@@ -40,29 +40,35 @@ export const BankSelection = ({
   return (
     <div className="space-y-4">
       <ScrollArea className="h-[300px] pr-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-3">
           {availableBanks.map((bank) => (
             <Card key={bank.id} className="p-4 bg-dark-200 border-dark-100 hover:bg-dark-100 transition-colors">
-              <div className="flex items-center space-x-3">
-                <Checkbox
-                  id={`bank-${bank.id}`}
-                  checked={selected.includes(bank.name)}
-                  onCheckedChange={(checked) => {
-                    if (checked) {
-                      setSelected([...selected, bank.name]);
-                    } else {
-                      setSelected(selected.filter((name) => name !== bank.name));
-                    }
-                  }}
-                  className="border-brand-orange data-[state=checked]:bg-brand-orange data-[state=checked]:border-brand-orange"
-                />
-                <Label htmlFor={`bank-${bank.id}`} className="text-gray-300">{bank.name}</Label>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-3">
+                  <Checkbox
+                    id={`bank-${bank.id}`}
+                    checked={selected.includes(bank.name)}
+                    onCheckedChange={(checked) => {
+                      if (checked) {
+                        setSelected([...selected, bank.name]);
+                      } else {
+                        setSelected(selected.filter((name) => name !== bank.name));
+                      }
+                    }}
+                    className="border-brand-orange data-[state=checked]:bg-brand-orange data-[state=checked]:border-brand-orange"
+                  />
+                  <Label htmlFor={`bank-${bank.id}`} className="text-gray-300 text-sm font-medium">{bank.name}</Label>
+                </div>
+                <div className="text-xs text-gray-500">
+                  {selected.includes(bank.name) ? "Selected" : "Not selected"}
+                </div>
               </div>
             </Card>
           ))}
         </div>
       </ScrollArea>
-      <div className="flex justify-end">
+      <div className="flex justify-end gap-2">
+        <Button variant="outline" onClick={onClose}>Cancel</Button>
         <Button onClick={handleSave} className="bg-brand-orange hover:bg-brand-orange/90">Save Changes</Button>
       </div>
     </div>

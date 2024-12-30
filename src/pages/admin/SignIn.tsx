@@ -17,23 +17,27 @@ const AdminSignIn = () => {
     setLoading(true);
 
     try {
-      const { data: { user }, error } = await supabase.auth.signInWithPassword({
+      // First attempt to sign in
+      const { data: { user }, error: signInError } = await supabase.auth.signInWithPassword({
         email,
-        password
+        password,
       });
 
-      if (error) throw error;
+      if (signInError) throw signInError;
 
-      // Check if user has admin role
+      if (!user) throw new Error("No user returned after login");
+
+      // Then check if user has admin role
       const { data: profile, error: profileError } = await supabase
         .from('profiles')
         .select('role')
-        .eq('id', user?.id)
+        .eq('id', user.id)
         .single();
 
       if (profileError) throw profileError;
 
       if (profile?.role !== 'admin') {
+        // If not admin, sign them out and throw error
         await supabase.auth.signOut();
         throw new Error('Unauthorized: Admin access required');
       }
@@ -45,6 +49,9 @@ const AdminSignIn = () => {
       
       navigate("/admin/dashboard");
     } catch (error: any) {
+      // Sign out if there was any error
+      await supabase.auth.signOut();
+      
       toast({
         title: "Error",
         description: error.message || "Failed to sign in",
@@ -74,6 +81,7 @@ const AdminSignIn = () => {
               onChange={(e) => setEmail(e.target.value)}
               required
               className="h-12 bg-dark-200 border-dark-100 text-white placeholder:text-gray-400"
+              disabled={loading}
             />
             <Input
               type="password"
@@ -82,6 +90,7 @@ const AdminSignIn = () => {
               onChange={(e) => setPassword(e.target.value)}
               required
               className="h-12 bg-dark-200 border-dark-100 text-white placeholder:text-gray-400"
+              disabled={loading}
             />
           </div>
           

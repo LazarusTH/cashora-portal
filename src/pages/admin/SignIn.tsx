@@ -15,24 +15,29 @@ const AdminSignIn = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+    console.log("Attempting admin sign in with email:", email);
 
     try {
       // First attempt to sign in
-      const { data: { user }, error: signInError } = await supabase.auth.signInWithPassword({
+      const { data, error: signInError } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
 
+      console.log("Sign in response:", { data, error: signInError });
+
       if (signInError) throw signInError;
 
-      if (!user) throw new Error("No user returned after login");
+      if (!data.user) throw new Error("No user returned after login");
 
       // Then check if user has admin role
       const { data: profile, error: profileError } = await supabase
         .from('profiles')
         .select('role')
-        .eq('id', user.id)
+        .eq('id', data.user.id)
         .single();
+
+      console.log("Profile check response:", { profile, error: profileError });
 
       if (profileError) throw profileError;
 
@@ -51,6 +56,7 @@ const AdminSignIn = () => {
     } catch (error: any) {
       // Sign out if there was any error
       await supabase.auth.signOut();
+      console.error("Admin sign in error:", error);
       
       toast({
         title: "Error",

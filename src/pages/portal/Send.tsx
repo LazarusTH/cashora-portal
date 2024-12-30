@@ -5,7 +5,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import DashboardLayout from "@/components/layout/DashboardLayout";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 interface SendFormData {
   recipient: string;
@@ -14,26 +15,50 @@ interface SendFormData {
 
 const Send = () => {
   const { register, handleSubmit, formState: { errors } } = useForm<SendFormData>();
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [loading, setLoading] = useState(false);
   const { toast } = useToast();
 
   const onSubmit = async (data: SendFormData) => {
-    setIsSubmitting(true);
+    setLoading(true);
     try {
-      // TODO: Implement send money logic with Supabase
-      console.log("Send money data:", data);
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error("Not authenticated");
+
+      // First, find the recipient's profile
+      const { data: recipientProfile, error: recipientError } = await supabase
+        .from('profiles')
+        .select('id')
+        .eq('email', data.recipient)
+        .single();
+
+      if (recipientError || !recipientProfile) {
+        throw new Error("Recipient not found");
+      }
+
+      const { error } = await supabase
+        .from('transactions')
+        .insert({
+          user_id: user.id,
+          recipient_id: recipientProfile.id,
+          type: 'send',
+          amount: data.amount,
+          status: 'pending'
+        });
+
+      if (error) throw error;
+
       toast({
         title: "Money sent successfully",
         description: `$${data.amount} has been sent to ${data.recipient}`,
       });
-    } catch (error) {
+    } catch (error: any) {
       toast({
         title: "Error",
-        description: "Failed to send money. Please try again.",
+        description: error.message,
         variant: "destructive",
       });
     } finally {
-      setIsSubmitting(false);
+      setLoading(false);
     }
   };
 
@@ -48,11 +73,12 @@ const Send = () => {
         <Card className="p-6">
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             <div className="space-y-2">
-              <Label htmlFor="recipient">Recipient Username/Email</Label>
+              <Label htmlFor="recipient">Recipient Email</Label>
               <Input
                 id="recipient"
-                {...register("recipient", { required: "Recipient is required" })}
-                placeholder="Enter recipient's username or email"
+                type="email"
+                {...register("recipient", { required: "Recipient email is required" })}
+                placeholder="Enter recipient's email"
               />
               {errors.recipient && (
                 <p className="text-sm text-red-500">{errors.recipient.message}</p>
@@ -75,8 +101,8 @@ const Send = () => {
               )}
             </div>
 
-            <Button type="submit" className="w-full" disabled={isSubmitting}>
-              {isSubmitting ? "Sending..." : "Send Money"}
+            <Button type="submit" className="w-full" disabled={loading}>
+              {loading ? "Sending..." : "Send Money"}
             </Button>
           </form>
         </Card>

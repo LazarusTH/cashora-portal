@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 export const SignUpForm = () => {
   const [formData, setFormData] = useState({
@@ -21,15 +22,35 @@ export const SignUpForm = () => {
     e.preventDefault();
     setLoading(true);
     
-    // TODO: Implement actual registration
-    setTimeout(() => {
-      setLoading(false);
+    try {
+      const { error } = await supabase.auth.signUp({
+        email: formData.email,
+        password: formData.password,
+        options: {
+          data: {
+            full_name: `${formData.firstName} ${formData.lastName}`,
+            date_of_birth: formData.dateOfBirth,
+            nationality: formData.nationality,
+          },
+        },
+      });
+
+      if (error) throw error;
+
       toast({
         title: "Registration successful!",
-        description: "Please wait for admin approval.",
+        description: "Please check your email to verify your account.",
       });
-      navigate("/auth/pending");
-    }, 1000);
+      navigate("/auth/signin");
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {

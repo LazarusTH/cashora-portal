@@ -6,7 +6,8 @@ import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { Upload } from "lucide-react";
 import DashboardLayout from "@/components/layout/DashboardLayout";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 interface DepositFormData {
   fullName: string;
@@ -16,26 +17,38 @@ interface DepositFormData {
 
 const Deposit = () => {
   const { register, handleSubmit, formState: { errors } } = useForm<DepositFormData>();
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [loading, setLoading] = useState(false);
   const { toast } = useToast();
 
   const onSubmit = async (data: DepositFormData) => {
-    setIsSubmitting(true);
+    setLoading(true);
     try {
-      // TODO: Implement deposit logic with Supabase
-      console.log("Deposit data:", data);
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error("Not authenticated");
+
+      const { error } = await supabase
+        .from('transactions')
+        .insert({
+          user_id: user.id,
+          type: 'deposit',
+          amount: data.amount,
+          status: 'pending'
+        });
+
+      if (error) throw error;
+
       toast({
         title: "Deposit request submitted",
         description: "We'll process your request and notify you via email.",
       });
-    } catch (error) {
+    } catch (error: any) {
       toast({
         title: "Error",
-        description: "Failed to submit deposit request. Please try again.",
+        description: error.message,
         variant: "destructive",
       });
     } finally {
-      setIsSubmitting(false);
+      setLoading(false);
     }
   };
 
@@ -101,8 +114,8 @@ const Deposit = () => {
               )}
             </div>
 
-            <Button type="submit" className="w-full" disabled={isSubmitting}>
-              {isSubmitting ? "Submitting..." : "Submit Deposit Request"}
+            <Button type="submit" className="w-full" disabled={loading}>
+              {loading ? "Submitting..." : "Submit Deposit Request"}
             </Button>
           </form>
         </Card>

@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 export const SignInForm = () => {
   const [email, setEmail] = useState("");
@@ -15,15 +16,28 @@ export const SignInForm = () => {
     e.preventDefault();
     setLoading(true);
     
-    // TODO: Implement actual authentication
-    setTimeout(() => {
-      setLoading(false);
+    try {
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (error) throw error;
+
       toast({
         title: "Welcome back!",
         description: "Successfully signed in to your account.",
       });
       navigate("/dashboard");
-    }, 1000);
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (

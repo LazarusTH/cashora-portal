@@ -5,7 +5,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import DashboardLayout from "@/components/layout/DashboardLayout";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 interface WithdrawFormData {
   amount: number;
@@ -16,26 +17,38 @@ interface WithdrawFormData {
 
 const Withdraw = () => {
   const { register, handleSubmit, formState: { errors } } = useForm<WithdrawFormData>();
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [loading, setLoading] = useState(false);
   const { toast } = useToast();
 
   const onSubmit = async (data: WithdrawFormData) => {
-    setIsSubmitting(true);
+    setLoading(true);
     try {
-      // TODO: Implement withdrawal logic with Supabase
-      console.log("Withdrawal data:", data);
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error("Not authenticated");
+
+      const { error } = await supabase
+        .from('transactions')
+        .insert({
+          user_id: user.id,
+          type: 'withdrawal',
+          amount: data.amount,
+          status: 'pending'
+        });
+
+      if (error) throw error;
+
       toast({
         title: "Withdrawal request submitted",
         description: "We'll process your request and notify you via email.",
       });
-    } catch (error) {
+    } catch (error: any) {
       toast({
         title: "Error",
-        description: "Failed to submit withdrawal request. Please try again.",
+        description: error.message,
         variant: "destructive",
       });
     } finally {
-      setIsSubmitting(false);
+      setLoading(false);
     }
   };
 
@@ -101,8 +114,8 @@ const Withdraw = () => {
               )}
             </div>
 
-            <Button type="submit" className="w-full" disabled={isSubmitting}>
-              {isSubmitting ? "Submitting..." : "Submit Withdrawal Request"}
+            <Button type="submit" className="w-full" disabled={loading}>
+              {loading ? "Submitting..." : "Submit Withdrawal Request"}
             </Button>
           </form>
         </Card>

@@ -83,12 +83,15 @@ export const AdminTransactionsList = () => {
     <Card className="bg-dark-200 border-dark-100">
       <div className="p-6">
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-lg font-semibold text-white">Recent Transactions</h2>
+          <div className="space-y-1">
+            <h2 className="text-lg font-semibold text-white">Recent Transactions</h2>
+            <p className="text-sm text-gray-400">A list of recent transactions</p>
+          </div>
           <Select defaultValue="all">
             <SelectTrigger className="w-[180px] bg-dark-100 border-dark-100">
               <SelectValue placeholder="Filter transactions" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="bg-dark-100 border-dark-200">
               <SelectItem value="all">All Transactions</SelectItem>
               <SelectItem value="deposit">Deposits</SelectItem>
               <SelectItem value="withdrawal">Withdrawals</SelectItem>
@@ -97,70 +100,72 @@ export const AdminTransactionsList = () => {
           </Select>
         </div>
         
-        <ScrollArea className="h-[400px]">
-          <table className="transaction-table">
-            <thead>
-              <tr>
-                <th>Client</th>
-                <th>Date</th>
-                <th>Status</th>
-                <th>Transaction Type</th>
-                <th>Amount</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              {transactions.map((transaction) => (
-                <tr key={transaction.id}>
-                  <td>
-                    <div>
-                      <p className="font-medium text-white">{transaction.client.name}</p>
-                      <p className="text-gray-400">{transaction.client.email}</p>
-                    </div>
-                  </td>
-                  <td className="text-gray-300">{transaction.date}</td>
-                  <td>
-                    <span className={`status-badge ${transaction.status}`}>
-                      {transaction.status}
-                    </span>
-                  </td>
-                  <td className="text-gray-300">
-                    <div className="flex items-center gap-2">
-                      {transaction.type === "deposit" && <ArrowDownRight className="h-4 w-4 text-green-400" />}
-                      {transaction.type === "withdrawal" && <ArrowUpRight className="h-4 w-4 text-red-400" />}
-                      {transaction.type === "send" && <Send className="h-4 w-4 text-blue-400" />}
-                      <span>
-                        {transaction.type}
-                        {transaction.type === "send" && transaction.recipient && (
-                          <span className="text-gray-400 ml-1">to {transaction.recipient.name}</span>
-                        )}
-                      </span>
-                    </div>
-                  </td>
-                  <td className="text-white font-medium">
-                    ${transaction.amount.toFixed(2)}
-                  </td>
-                  <td>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" className="h-8 w-8 p-0">
-                          <MoreVertical className="h-4 w-4 text-gray-400" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end" className="bg-dark-100 text-gray-300 border-dark-200">
-                        <DropdownMenuItem className="hover:bg-dark-200">
-                          <Pencil className="mr-2 h-4 w-4" /> Edit
-                        </DropdownMenuItem>
-                        <DropdownMenuItem className="hover:bg-dark-200 text-red-400">
-                          <Trash2 className="mr-2 h-4 w-4" /> Delete
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </td>
+        <ScrollArea className="h-[400px] -mx-6">
+          <div className="px-6">
+            <table className="transaction-table">
+              <thead>
+                <tr>
+                  <th>Client</th>
+                  <th>Date</th>
+                  <th>Status</th>
+                  <th>Transaction Type</th>
+                  <th>Amount</th>
+                  <th></th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {transactions.map((transaction) => (
+                  <tr key={transaction.id}>
+                    <td>
+                      <div>
+                        <p className="font-medium text-white">{transaction.client.name}</p>
+                        <p className="text-gray-400">{transaction.client.email}</p>
+                      </div>
+                    </td>
+                    <td className="text-gray-300">{transaction.date}</td>
+                    <td>
+                      <span className={`status-badge ${transaction.status}`}>
+                        {transaction.status}
+                      </span>
+                    </td>
+                    <td className="text-gray-300">
+                      <div className="flex items-center gap-2">
+                        {transaction.type === "deposit" && <ArrowDownRight className="h-4 w-4 text-green-400" />}
+                        {transaction.type === "withdrawal" && <ArrowUpRight className="h-4 w-4 text-red-400" />}
+                        {transaction.type === "send" && <Send className="h-4 w-4 text-blue-400" />}
+                        <span>
+                          {transaction.type}
+                          {transaction.type === "send" && transaction.recipient && (
+                            <span className="text-gray-400 ml-1">to {transaction.recipient.name}</span>
+                          )}
+                        </span>
+                      </div>
+                    </td>
+                    <td className="text-white font-medium">
+                      ${transaction.amount.toFixed(2)}
+                    </td>
+                    <td>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" className="h-8 w-8 p-0">
+                            <MoreVertical className="h-4 w-4 text-gray-400" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end" className="bg-dark-100 text-gray-300 border-dark-200">
+                          <DropdownMenuItem className="hover:bg-dark-200">
+                            <Pencil className="mr-2 h-4 w-4" /> Edit
+                          </DropdownMenuItem>
+                          <DropdownMenuItem className="hover:bg-dark-200 text-red-400">
+                            <Trash2 className="mr-2 h-4 w-4" /> Delete
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </ScrollArea>
       </div>
     </Card>

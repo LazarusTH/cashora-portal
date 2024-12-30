@@ -53,10 +53,10 @@ export default {
           foreground: "hsl(var(--card-foreground))",
         },
         dark: {
-          100: "#1A1F2C",
-          200: "#151926",
-          300: "#0F131C",
-          400: "#090C12",
+          100: "#151926",
+          200: "#0F131C",
+          300: "#0A0F1C",
+          400: "#060912",
         },
         brand: {
           orange: "#FF8B3E",

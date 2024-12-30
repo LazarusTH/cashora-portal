@@ -19,16 +19,16 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full bg-dark-300">
-        <Sidebar className="fixed left-0 top-0 z-40 h-screen transition-transform -translate-x-full md:translate-x-0 bg-dark-200 border-r border-dark-100 w-[250px]">
-          <SidebarHeader className="p-4">
+        <Sidebar className="fixed left-0 top-0 z-40 h-screen transition-transform -translate-x-full md:translate-x-0 bg-dark-200 border-r border-dark-100 w-[280px]">
+          <SidebarHeader className="p-6">
             <div className="flex items-center gap-2">
               <span className="text-2xl font-bold text-brand-orange">CASHORA</span>
             </div>
-            <div className="mt-4">
+            <div className="mt-6">
               <Input 
                 type="search"
-                placeholder="Search for..."
-                className="search-input w-full bg-dark-100 border-dark-100 text-gray-300"
+                placeholder="Search..."
+                className="search-input"
               />
             </div>
           </SidebarHeader>
@@ -73,7 +73,7 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
               <SidebarMenuItem>
                 <SidebarMenuButton tooltip="Transactions" onClick={() => navigate("/admin/transactions")} className="sidebar-item">
                   <History className="h-5 w-5" />
-                  <span>Transaction</span>
+                  <span>Transactions</span>
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
@@ -102,7 +102,7 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
           <SidebarTrigger className="p-2 bg-dark-200 rounded-lg text-white hover:bg-dark-100" />
         </div>
         
-        <main className="flex-1 p-4 md:p-6 md:ml-[250px] w-full">
+        <main className="flex-1 p-6 md:p-8 md:ml-[280px] w-full">
           {children}
         </main>
       </div>

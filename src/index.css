@@ -40,7 +40,7 @@
 }
 
 .sidebar-item {
-  @apply flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-gray-300 rounded-lg hover:bg-dark-100 transition-colors;
+  @apply flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-400 rounded-lg hover:bg-dark-100 transition-colors;
 }
 
 .sidebar-item.active {
@@ -48,7 +48,7 @@
 }
 
 .stats-card {
-  @apply p-6 rounded-xl bg-dark-200 border border-dark-100;
+  @apply p-6 rounded-xl bg-dark-200 border border-dark-100 hover:border-brand-blue/20 transition-colors;
 }
 
 .transaction-table {
@@ -56,11 +56,11 @@
 }
 
 .transaction-table th {
-  @apply px-4 py-2 text-left text-sm font-medium text-gray-400;
+  @apply px-4 py-3 text-left text-sm font-medium text-gray-400;
 }
 
 .transaction-table td {
-  @apply px-4 py-3 text-sm border-t border-dark-200;
+  @apply px-4 py-4 text-sm border-t border-dark-200;
 }
 
 .transaction-table tr:hover {
@@ -68,7 +68,7 @@
 }
 
 .status-badge {
-  @apply px-2 py-1 text-xs font-medium rounded-full;
+  @apply px-2.5 py-1 text-xs font-medium rounded-full;
 }
 
 .status-badge.accepted {
@@ -84,9 +84,9 @@
 }
 
 .chart-card {
-  @apply p-6 rounded-xl bg-dark-200 border border-dark-100;
+  @apply p-6 rounded-xl bg-dark-200 border border-dark-100 hover:border-brand-blue/20 transition-colors;
 }
 
 .search-input {
-  @apply w-full bg-dark-200 border border-dark-100 rounded-lg px-4 py-2 text-sm text-gray-300 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-brand-blue;
+  @apply w-full bg-dark-200 border border-dark-100 rounded-lg px-4 py-2.5 text-sm text-gray-300 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-brand-blue/20;
 }

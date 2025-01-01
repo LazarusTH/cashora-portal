@@ -27,7 +27,6 @@ export const SignInForm = ({
     setLoading(true);
 
     try {
-      // First attempt to sign in
       const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
         email,
         password,
@@ -39,7 +38,7 @@ export const SignInForm = ({
         throw new Error("No user returned after login");
       }
 
-      // Then check if the user has admin role
+      // Check if the user has admin role
       const { data: profile, error: profileError } = await supabase
         .from('profiles')
         .select('role')
@@ -47,13 +46,11 @@ export const SignInForm = ({
         .maybeSingle();
 
       if (profileError) {
-        // If there's an error fetching the profile, sign out and throw error
-        await supabase.auth.signOut();
         throw profileError;
       }
 
-      if (profile?.role !== 'admin') {
-        // If user is not an admin, sign out and throw error
+      if (!profile || profile.role !== 'admin') {
+        // Only sign out if the user is not an admin
         await supabase.auth.signOut();
         throw new Error("Unauthorized: Admin access required");
       }

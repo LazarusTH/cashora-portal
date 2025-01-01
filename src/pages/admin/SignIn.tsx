@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,8 +9,78 @@ const AdminSignIn = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showCreateAdmin, setShowCreateAdmin] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
+
+  useEffect(() => {
+    const checkForAdmin = async () => {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('id')
+        .eq('role', 'admin')
+        .single();
+      
+      if (error && error.code === 'PGRST116') {
+        // No admin found
+        setShowCreateAdmin(true);
+      }
+    };
+
+    checkForAdmin();
+  }, []);
+
+  const handleCreateAdmin = async () => {
+    if (!email || !password) {
+      toast({
+        title: "Error",
+        description: "Please enter both email and password",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      // First create the user
+      const { data: authData, error: signUpError } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: {
+            full_name: "Admin User",
+            role: "admin"
+          }
+        }
+      });
+
+      if (signUpError) throw signUpError;
+
+      if (!authData.user) {
+        throw new Error("Failed to create admin user");
+      }
+
+      toast({
+        title: "Success",
+        description: "Admin account created successfully. Please sign in.",
+      });
+
+      // Clear the form
+      setEmail("");
+      setPassword("");
+      setShowCreateAdmin(false);
+    } catch (error: any) {
+      console.error("Create admin error:", error);
+      toast({
+        title: "Error",
+        description: error.message || "Failed to create admin account",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -59,7 +129,6 @@ const AdminSignIn = () => {
       
       let errorMessage = "Failed to sign in";
       
-      // Handle specific error cases
       if (error.message?.includes("Invalid login credentials")) {
         errorMessage = "Invalid email or password";
       } else if (error.message === "Unauthorized: Admin access required") {
@@ -87,7 +156,7 @@ const AdminSignIn = () => {
         <div className="space-y-2">
           <h1 className="text-3xl font-bold text-white">Admin Access</h1>
           <p className="text-gray-400">
-            Sign in to access the admin panel
+            {showCreateAdmin ? "Create the first admin account" : "Sign in to access the admin panel"}
           </p>
         </div>
         
@@ -113,13 +182,24 @@ const AdminSignIn = () => {
             />
           </div>
           
-          <Button
-            type="submit"
-            className="w-full h-12 text-lg font-medium"
-            disabled={loading}
-          >
-            {loading ? "Signing in..." : "Sign In"}
-          </Button>
+          {showCreateAdmin ? (
+            <Button
+              type="button"
+              className="w-full h-12 text-lg font-medium"
+              disabled={loading}
+              onClick={handleCreateAdmin}
+            >
+              {loading ? "Creating Admin..." : "Create Admin Account"}
+            </Button>
+          ) : (
+            <Button
+              type="submit"
+              className="w-full h-12 text-lg font-medium"
+              disabled={loading}
+            >
+              {loading ? "Signing in..." : "Sign In"}
+            </Button>
+          )}
         </form>
       </div>
     </div>

@@ -18,32 +18,34 @@ const AdminSignIn = () => {
 
     try {
       // First attempt to sign in
-      const { data: { user, session }, error: signInError } = await supabase.auth.signInWithPassword({
+      const { data, error: signInError } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
 
-      if (signInError) throw signInError;
+      if (signInError) {
+        throw signInError;
+      }
 
-      if (!user) throw new Error("No user returned after login");
+      if (!data?.user) {
+        throw new Error("No user returned after login");
+      }
 
       // Then check if user has admin role
       const { data: profile, error: profileError } = await supabase
         .from('profiles')
         .select('role')
-        .eq('id', user.id)
+        .eq('id', data.user.id)
         .single();
 
       if (profileError) {
-        // If there's an error checking the profile, sign out and throw
         await supabase.auth.signOut();
-        throw profileError;
+        throw new Error("Failed to fetch user profile");
       }
 
       if (profile?.role !== 'admin') {
-        // If not admin, sign them out and throw error
         await supabase.auth.signOut();
-        throw new Error('Unauthorized: Admin access required');
+        throw new Error("Unauthorized: Admin access required");
       }
 
       toast({
@@ -55,12 +57,15 @@ const AdminSignIn = () => {
     } catch (error: any) {
       console.error("Admin sign in error:", error);
       
-      // Handle specific error messages
       let errorMessage = "Failed to sign in";
-      if (error.message === "Invalid login credentials") {
+      
+      // Handle specific error cases
+      if (error.message?.includes("Invalid login credentials")) {
         errorMessage = "Invalid email or password";
       } else if (error.message === "Unauthorized: Admin access required") {
         errorMessage = "This account does not have admin access";
+      } else if (error.message === "Failed to fetch user profile") {
+        errorMessage = "Error accessing user profile";
       }
       
       toast({
@@ -68,8 +73,8 @@ const AdminSignIn = () => {
         description: errorMessage,
         variant: "destructive",
       });
-      
-      // Ensure we're signed out if there was an error
+
+      // Ensure we're signed out on any error
       await supabase.auth.signOut();
     } finally {
       setLoading(false);

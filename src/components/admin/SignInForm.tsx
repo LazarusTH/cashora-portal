@@ -27,31 +27,33 @@ export const SignInForm = ({
     setLoading(true);
 
     try {
-      const { data, error: signInError } = await supabase.auth.signInWithPassword({
+      // First attempt to sign in
+      const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
 
-      if (signInError) {
-        throw signInError;
-      }
+      if (signInError) throw signInError;
 
-      if (!data?.user) {
+      if (!signInData?.user) {
         throw new Error("No user returned after login");
       }
 
+      // Then check if the user has admin role
       const { data: profile, error: profileError } = await supabase
         .from('profiles')
         .select('role')
-        .eq('id', data.user.id)
+        .eq('id', signInData.user.id)
         .maybeSingle();
 
       if (profileError) {
+        // If there's an error fetching the profile, sign out and throw error
         await supabase.auth.signOut();
-        throw new Error("Failed to fetch user profile");
+        throw profileError;
       }
 
       if (profile?.role !== 'admin') {
+        // If user is not an admin, sign out and throw error
         await supabase.auth.signOut();
         throw new Error("Unauthorized: Admin access required");
       }
@@ -71,8 +73,6 @@ export const SignInForm = ({
         errorMessage = "Invalid email or password";
       } else if (error.message === "Unauthorized: Admin access required") {
         errorMessage = "This account does not have admin access";
-      } else if (error.message === "Failed to fetch user profile") {
-        errorMessage = "Error accessing user profile";
       }
       
       toast({
@@ -80,8 +80,6 @@ export const SignInForm = ({
         description: errorMessage,
         variant: "destructive",
       });
-
-      await supabase.auth.signOut();
     } finally {
       setLoading(false);
     }

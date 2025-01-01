@@ -73,6 +73,7 @@ export type Database = {
           email: string | null
           full_name: string | null
           id: string
+          is_frozen: boolean | null
           role: string | null
           updated_at: string
         }
@@ -82,6 +83,7 @@ export type Database = {
           email?: string | null
           full_name?: string | null
           id: string
+          is_frozen?: boolean | null
           role?: string | null
           updated_at?: string
         }
@@ -91,6 +93,7 @@ export type Database = {
           email?: string | null
           full_name?: string | null
           id?: string
+          is_frozen?: boolean | null
           role?: string | null
           updated_at?: string
         }
@@ -102,6 +105,7 @@ export type Database = {
           bank_id: string | null
           created_at: string
           id: string
+          receipt_url: string | null
           recipient_id: string | null
           status: string | null
           type: string
@@ -113,6 +117,7 @@ export type Database = {
           bank_id?: string | null
           created_at?: string
           id?: string
+          receipt_url?: string | null
           recipient_id?: string | null
           status?: string | null
           type: string
@@ -124,6 +129,7 @@ export type Database = {
           bank_id?: string | null
           created_at?: string
           id?: string
+          receipt_url?: string | null
           recipient_id?: string | null
           status?: string | null
           type?: string

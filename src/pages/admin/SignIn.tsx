@@ -15,31 +15,30 @@ const AdminSignIn = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    console.log("Attempting admin sign in with email:", email);
 
     try {
       // First attempt to sign in
-      const { data, error: signInError } = await supabase.auth.signInWithPassword({
+      const { data: { user, session }, error: signInError } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
 
-      console.log("Sign in response:", { data, error: signInError });
-
       if (signInError) throw signInError;
 
-      if (!data.user) throw new Error("No user returned after login");
+      if (!user) throw new Error("No user returned after login");
 
       // Then check if user has admin role
       const { data: profile, error: profileError } = await supabase
         .from('profiles')
         .select('role')
-        .eq('id', data.user.id)
+        .eq('id', user.id)
         .single();
 
-      console.log("Profile check response:", { profile, error: profileError });
-
-      if (profileError) throw profileError;
+      if (profileError) {
+        // If there's an error checking the profile, sign out and throw
+        await supabase.auth.signOut();
+        throw profileError;
+      }
 
       if (profile?.role !== 'admin') {
         // If not admin, sign them out and throw error
@@ -54,15 +53,24 @@ const AdminSignIn = () => {
       
       navigate("/admin/dashboard");
     } catch (error: any) {
-      // Sign out if there was any error
-      await supabase.auth.signOut();
       console.error("Admin sign in error:", error);
+      
+      // Handle specific error messages
+      let errorMessage = "Failed to sign in";
+      if (error.message === "Invalid login credentials") {
+        errorMessage = "Invalid email or password";
+      } else if (error.message === "Unauthorized: Admin access required") {
+        errorMessage = "This account does not have admin access";
+      }
       
       toast({
         title: "Error",
-        description: error.message || "Failed to sign in",
+        description: errorMessage,
         variant: "destructive",
       });
+      
+      // Ensure we're signed out if there was an error
+      await supabase.auth.signOut();
     } finally {
       setLoading(false);
     }

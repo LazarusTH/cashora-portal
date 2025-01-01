@@ -122,8 +122,10 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
           <SidebarTrigger className="p-2 bg-dark-200 rounded-lg text-white hover:bg-dark-100" />
         </div>
         
-        <main className="flex-1 p-6 md:p-8 md:ml-[280px] w-full">
-          {children}
+        <main className="flex-1 md:ml-[280px]">
+          <div className="px-4 py-6 md:px-6 lg:px-8">
+            {children}
+          </div>
         </main>
       </div>
     </SidebarProvider>
